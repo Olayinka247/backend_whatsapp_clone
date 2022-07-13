@@ -7,9 +7,19 @@ import { JWTMiddleware } from "../../auth/token.js";
 const userRouter = express.Router();
 
 // GET /users
+// userRouter.get("/", JWTMiddleware, async (req, res, next) => {
+//   try {
+//     const users = await userModel.find();
+//     res.send(users);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+//GET /users and exclude the user with token
 userRouter.get("/", JWTMiddleware, async (req, res, next) => {
   try {
-    const users = await userModel.find();
+    const users = await userModel.find({ _id: { $ne: req.user._id } });
     res.send(users);
   } catch (err) {
     next(err);
